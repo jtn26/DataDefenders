@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "@webcomponents/custom-elements";
 import ContentScript from "./ContentScript";
-import { StylesProvider, jssPreset } from "@material-ui/styles";
+import { StylesProvider, jssPreset } from "@mui/styles";
 import { create } from "jss";
 
 class ReactExtensionContainer extends HTMLElement {

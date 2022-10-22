@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 import { Box, Button, Typography } from "@mui/material";
 
 const useStyles = makeStyles({
@@ -24,27 +24,29 @@ const useStyles = makeStyles({
 });
 
 function ContentScript() {
-  const { modal, overlay } = useStyles();
-  const [open, setOpen] = useState(false);
+  return null;
+  // const { modal, overlay } = useStyles();
+  // const [open, setOpen] = useState(false);
 
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message.value === "openPopup") {
-      setOpen(true);
-    }
-  });
+  // chrome.runtime.onMessage.addListener((message) => {
+  //   if (message.value === "openPopup") {
+  //     console.log('opening popup')
+  //     setOpen(true);
+  //   }
+  // });
 
-  if (!open) return null;
+  // if (!open) return null;
 
-  return (
-    <Box className={overlay}>
-      <Box className={modal}>
-        <Typography>Popup</Typography>
-        <Button variant="contained" onClick={() => setOpen(false)}>
-          Close
-        </Button>
-      </Box>
-    </Box>
-  );
+  // return (
+  //   <Box className={overlay}>
+  //     <Box className={modal}>
+  //       <Typography>Popup</Typography>
+  //       <Button variant="contained" onClick={() => setOpen(false)}>
+  //         Close
+  //       </Button>
+  //     </Box>
+  //   </Box>
+  // );
 }
 
 export default ContentScript;
