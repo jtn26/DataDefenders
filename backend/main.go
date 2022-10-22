@@ -62,9 +62,9 @@ func main() {
 	router.GET("/conversion/utg/:url", getURLToGiberish)
 
 	router.GET("/report/count/:url", getURLReportCounts)
-	router.POST("/report/increment/:url", incURLReportCount)
+	router.POST("/report/increment/url/:url", incURLReportCount)
 	router.GET("/report/allurls", getAllURLReports)
-
+	router.POST("/report/increment/gib/:gib", incGibReportCount(router))
 	router.Run(":8080")
 }
 
@@ -182,6 +182,54 @@ func incURLReportCount(c *gin.Context) {
 		c.Status(http.StatusOK)
 	}
 }
+func incGibReportCount(root *gin.Engine) gin.HandlerFunc { 
+	return func (c *gin.Context) {
+		gibString := string(c.Param("gib"))
+		ctrKey, err := decode(gibString)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		lookupKey := globalCounterKey + strconv.FormatInt(ctrKey, 10)
+		urlString, err2 := redisClient.Get(lookupKey).Result()
+
+		if err2 != nil && err2 != redis.Nil {
+			c.JSON(http.StatusInternalServerError, fmt.Sprintf("error: %s", err))
+			return
+		} else if err2 == redis.Nil {
+			c.JSON(http.StatusBadRequest, "Non existent Gib")
+			return
+		} else {
+			c.Request.URL.Path = "/report/increment/url/" + urlString
+			root.HandleContext(c)
+			c.Abort()
+		}
+	}
+  }
+// func incGibReportCount(c *gin.Context) {
+// 	gibString := string(c.Param("gib"))
+// 	ctrKey, err := decode(gibString)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
+
+// 	lookupKey := globalCounterKey + strconv.FormatInt(ctrKey, 10)
+// 	urlString, err2 := redisClient.Get(lookupKey).Result()
+
+// 	if err2 != nil && err2 != redis.Nil {
+// 		c.JSON(http.StatusInternalServerError, fmt.Sprintf("error: %s", err))
+// 		return
+// 	} else if err2 == redis.Nil {
+// 		c.JSON(http.StatusBadRequest, "Non existent Gib")
+// 		return
+// 	} else {
+// 		c.Set("url", urlString)
+		
+// 	}
+// 	c.Redirect(http.StatusMovedPermanently, "http://www.google.com/")
+// }
 
 func getAllURLReports(c *gin.Context) {
 
