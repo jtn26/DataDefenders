@@ -1,6 +1,6 @@
 import './index.css';
-import { TextField, Button } from '@mui/material';
-import { useEffect, useState } from 'react'
+import { TextField, Button, Box, Container, CssBaseline, Fab } from '@mui/material';
+import React, { useEffect, useState } from 'react'
 
 function getCurrentTab() {
 
@@ -17,17 +17,16 @@ function getCurrentTab() {
     } catch (e) {
         reject(e);
     }
-})
+  })
 }
 
-const GenerateWindow = ({emailAddress }) => {
-  const [currentPage, setCurrentPage] = useState(null)
-  const [showReportSection, setShowReportSection] = useState(false);
+const GenerateWindow = ({ emailAddress,  reportWindowCallback }) => {
+  const [currentPage, setCurrentPage] = useState("")
 
   useEffect(async () => {
     const tab = await getCurrentTab()
     console.log(tab)
-    setCurrentPage(tab)
+    // setCurrentPage(tab)
   }, [currentPage, setCurrentPage])
 
   const newTab = () => {
@@ -36,24 +35,29 @@ const GenerateWindow = ({emailAddress }) => {
   const copy = () => {
     navigator.clipboard.writeText(emailAddress)
   }
-  const submit = () => {
-    setShowReportSection(true);
+  const report = () => {
+    reportWindowCallback(true);
   }
+
+  // const { register, handleSubmit } = useForm();
 
   return (
   <div className="App">
   <header className="App-header">
-    <p>
-      Defender
-    </p>
-    <Button onClick={copy} variant="contained">Generate</Button>
+
+    <CssBaseline />
+    <Container maxWidth="sm">
+      {/* <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }} /> */}
     
-    <Button onClick={submit} variant="contained">Report A Site</Button>
-    {showReportSection && <div>
-      <TextField  id="outlined-basic" label="Enter Bad Email Address" variant="outlined" />
-      </div>}
+    <Fab onClick={newTab} variant="extended">Dashboard</Fab>
+
+    <p>Defender</p>
+
+    <Button onClick={copy} variant="contained">Generate Address</Button>
     
-    <Button onClick={newTab} variant="outlined">Dashboard</Button>
+    <Button onClick={report} variant="contained">Report A Site</Button>
+    </Container>
+
   </header>
 </div>
 )

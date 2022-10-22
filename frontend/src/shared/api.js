@@ -17,5 +17,9 @@ const getUrl = async (gibberish) => {
   return contents.text()
 }
 
-const getReportCount = async (pageUrl)
-export { setKeyValue, }
+const getReportCount = async (pageUrl) => {
+  const url = `${CONVERSION_BASE_URL}/gtu/${gibberish}`
+  const contents = await fetch(url)
+  return contents.text()
+}
+export { setKeyValue, getGibberish, getUrl, getReportCount }
