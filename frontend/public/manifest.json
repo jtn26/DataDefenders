@@ -5,13 +5,13 @@
   "version": "0.0.1",
   "browser_action": {
     "default_popup": "index.html",
-    "default_icon": "logo192.png",
+    "default_icon": "hackgt9.png",
     "default_title": "Open the popup"
   },
   "icons": {
-    "16": "logo192.png",
-    "48": "logo192.png",
-    "128": "logo192.png"
+    "16": "hackgt9.png",
+    "48": "hackgt9.png",
+    "128": "hackgt9.png"
   },
   "optional_permissions": ["<all_urls>"],
   "permissions": ["tabs", "activeTab"]
