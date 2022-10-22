@@ -3,9 +3,15 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
+)
+
+const (
+	globalCounterKey = "GLOBAL_COUNTER_"
 )
 
 // album represents data about a record album.
@@ -24,10 +30,13 @@ var albums = []album{
 }
 
 var redisClient *redis.Client
+var mtx sync.Mutex
+var glblCtr int64
 
 func main() {
 
 	err := establishRedisConnection()
+	glblCtr = 0
 
 	if err != nil {
 		fmt.Println("Backend start failed.\nFailed to connect to Redis.")
@@ -51,6 +60,8 @@ func main() {
 
 func getGiberishToURL(c *gin.Context) {
 	gibString := string(c.Param("gib"))
+
+	val, err := redisClient.Get(urlString).Result()
 	urlString, err := decode(gibString)
 
 	if err != nil {
@@ -62,9 +73,46 @@ func getGiberishToURL(c *gin.Context) {
 
 func getURLToGiberish(c *gin.Context) {
 	urlString := string(c.Param("url"))
-	fmt.Println(urlString)
-	gibString := encode(123456789)
-	c.JSON(http.StatusOK, gibString)
+	val, err := redisClient.Get(urlString).Result()
+
+	if err != nil && err != redis.Nil {
+		c.JSON(http.StatusInternalServerError, fmt.Sprintf("error: %s", err))
+		return
+	} else if err == redis.Nil {
+		// Get updated counter
+		mtx.Lock()
+		defer mtx.Unlock()
+		glblCtr = glblCtr + 1
+
+		// Use counter to get encoding
+		gibString := encode(glblCtr)
+
+		// Save encoding for future
+		err := redisClient.Set(urlString, gibString, 0).Err()
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to save u2g map to DB. Error: %s", err))
+			return
+		}
+
+		// Save Global Counter mapping for decoding
+		counterKey := globalCounterKey + strconv.FormatInt(glblCtr, 10)
+		err = redisClient.Set(counterKey, urlString, 0).Err()
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to add c2u map to DB. Error: %s", err))
+			return
+		}
+
+		c.JSON(http.StatusOK, gibString)
+
+	} else {
+		c.JSON(http.StatusOK, val)
+	}
+
+	// gibString := encode(urlString)
+
+	// c.JSON(http.StatusOK, gibString)
 }
 
 func establishRedisConnection() error {
@@ -142,9 +190,12 @@ func getRedisKey(c *gin.Context) {
 	key := string(c.Param("key"))
 	val, err := redisClient.Get(key).Result()
 
-	if err != nil {
+	if err != nil && err != redis.Nil {
 		c.JSON(http.StatusInternalServerError, fmt.Sprintf("error: %s", err))
 		return
+	} else if err == redis.Nil {
+		c.JSON(http.StatusBadRequest, "Key Does Not Exists!")
 	}
+
 	c.JSON(http.StatusOK, val)
 }
