@@ -43,7 +43,28 @@ func main() {
 	router.POST("/redistalk/set", setRedisKeyValue)
 	router.GET("/redistalk/get/:key", getRedisKey)
 
+	router.GET("/conversion/gtu/:gib", getGiberishToURL)
+	router.GET("/conversion/utg/:url", getURLToGiberish)
+
 	router.Run(":8080")
+}
+
+func getGiberishToURL(c *gin.Context) {
+	gibString := string(c.Param("gib"))
+	urlString, err := decode(gibString)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, urlString)
+}
+
+func getURLToGiberish(c *gin.Context) {
+	urlString := string(c.Param("url"))
+	gibString := encode(urlString)
+
+	c.JSON(http.StatusOK, gibString)
 }
 
 func establishRedisConnection() error {
