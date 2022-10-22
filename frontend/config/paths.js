@@ -58,8 +58,8 @@ module.exports = {
   appPublic: resolveApp('public'),
   // changed
   appHtml: resolveApp('public/index.html'),
-  appIndexJs: resolveModule(resolveApp, 'src/popup/index'),
-  appDashboardJs: resolveModule(resolveApp, 'src/dashboard/index'),
+  appIndexJs: resolveModule(resolveApp, 'src/pages/popup/index'),
+  appDashboardJs: resolveModule(resolveApp, 'src/pages/dashboard/index'),
   // appBackgroundJs: resolveModule(resolveApp, 'src/background/index'),
   // appContentJs: resolveModule(resolveApp, 'src/contentScript/index'),
   appPackageJson: resolveApp('package.json'),
