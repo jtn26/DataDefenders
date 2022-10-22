@@ -11,17 +11,21 @@ export const getCurrentTabUId = (callback) => {
 };
 
 function App() {
-  const onClick = () => {
-    chrome.tabs.create({ url: chrome.runtime.getURL("swag.html") });
+  var emailAddress = "test@gmail.com";
+  const newTab = () => {
+    chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });
+  }
+  const copy = () => {
+    navigator.clipboard.writeText(emailAddress.state.textToCopy)
   }
   return (
     <div className="App">
       <header className="App-header">
         <p>
-          hello
+          Defender
         </p>
-        <Button onClick={() => {alert('clicked');}} variant="contained">Generate</Button>
-        <Button onClick={onClick} variant="contained">Dashboard</Button>
+        <Button onClick={copy} variant="contained">Generate</Button>
+        <Button onClick={newTab} variant="outlined">Dashboard</Button>
       </header>
     </div>
   );
