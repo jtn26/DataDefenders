@@ -16,7 +16,7 @@ function App() {
     chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });
   }
   const copy = () => {
-    navigator.clipboard.writeText(emailAddress.state.textToCopy)
+    navigator.clipboard.writeText(emailAddress)
   }
   return (
     <div className="App">
