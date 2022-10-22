@@ -62,8 +62,8 @@ func getGiberishToURL(c *gin.Context) {
 
 func getURLToGiberish(c *gin.Context) {
 	urlString := string(c.Param("url"))
-	gibString := encode(urlString)
-
+	fmt.Println(urlString)
+	gibString := encode(123456789)
 	c.JSON(http.StatusOK, gibString)
 }
 
