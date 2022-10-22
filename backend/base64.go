@@ -5,7 +5,7 @@ import (
 	"math/big"
 )
 
-func encode(id int) string {
+func encode(id int64) string {
 	// url = strings.ToUpper(url)
 	// urlb := []byte(url)
 	// for i, _ := range urlb {
@@ -21,13 +21,13 @@ func encode(id int) string {
 	return encoded_url
 }
 
-func decode(encoded_url string) (int, error) {
+func decode(encoded_url string) (int64, error) {
 	// encoded_url = strings.Replace(encoded_url, "-", "+", -1)
 	// encoded_url = strings.Replace(encoded_url, "_", "/", -1)
 	// decoded_url, err := b64.StdEncoding.DecodeString(encoded_url)
 	// durlb := []byte(decoded_url)
 	// for i, _ := range durlb {
-	// 	durlb[i] += byte('.')	
+	// 	durlb[i] += byte('.')
 	// }
 	// durls := string(durlb[:])
 	// durls = strings.ToLower(durls)
@@ -43,5 +43,5 @@ func decode(encoded_url string) (int, error) {
 		return -1, err
 	}
 
-	return int(cb.Int64()), nil
+	return (cb.Int64()), nil
 }

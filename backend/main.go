@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	globalCounterKey = "GLOBAL_COUNTER_"
+	globalCounterKey   = "GLOBAL_COUNTER_"
+	reportedURLVoteKey = "URL_VOTES_"
 )
 
 // album represents data about a record album.
@@ -20,6 +21,11 @@ type album struct {
 	Title  string  `json:"title"`
 	Artist string  `json:"artist"`
 	Price  float64 `json:"price"`
+}
+
+type URLReport struct {
+	URL     string `json:"url"`
+	Reports int64  `json:"reports"`
 }
 
 // albums slice to seed record album data.
@@ -55,20 +61,34 @@ func main() {
 	router.GET("/conversion/gtu/:gib", getGiberishToURL)
 	router.GET("/conversion/utg/:url", getURLToGiberish)
 
+	router.GET("/report/count/:url", getURLReportCounts)
+	router.POST("/report/increment/:url", incURLReportCount)
+	router.GET("/report/allurls", getAllURLReports)
+
 	router.Run(":8080")
 }
 
 func getGiberishToURL(c *gin.Context) {
 	gibString := string(c.Param("gib"))
 
-	val, err := redisClient.Get(urlString).Result()
-	urlString, err := decode(gibString)
-
+	ctrKey, err := decode(gibString)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, urlString)
+
+	lookupKey := globalCounterKey + strconv.FormatInt(ctrKey, 10)
+	urlString, err := redisClient.Get(lookupKey).Result()
+
+	if err != nil && err != redis.Nil {
+		c.JSON(http.StatusInternalServerError, fmt.Sprintf("error: %s", err))
+		return
+	} else if err == redis.Nil {
+		c.JSON(http.StatusBadRequest, "Non existent Gib")
+		return
+	} else {
+		c.JSON(http.StatusOK, urlString)
+	}
 }
 
 func getURLToGiberish(c *gin.Context) {
@@ -113,6 +133,93 @@ func getURLToGiberish(c *gin.Context) {
 	// gibString := encode(urlString)
 
 	// c.JSON(http.StatusOK, gibString)
+}
+
+func getURLReportCounts(c *gin.Context) {
+	urlString := string(c.Param("url"))
+	lookupKey := reportedURLVoteKey + urlString
+	val, err := redisClient.Get(lookupKey).Result()
+
+	if err != nil && err != redis.Nil {
+		c.JSON(http.StatusInternalServerError, fmt.Sprintf("error: %s", err))
+		return
+	} else if err == redis.Nil {
+		c.JSON(http.StatusOK, 0)
+	} else {
+		c.JSON(http.StatusOK, val)
+	}
+
+}
+
+func incURLReportCount(c *gin.Context) {
+	urlString := string(c.Param("url"))
+	lookupKey := reportedURLVoteKey + urlString
+	val, err := redisClient.Get(lookupKey).Result()
+
+	if err != nil && err != redis.Nil {
+		c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to retrieve existing votes from DB. Error:%s", err))
+		return
+	} else if err == redis.Nil {
+		// set to 1
+		err = redisClient.Set(lookupKey, 1, 0).Err()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to add vote to DB. Error: %s", err))
+			return
+		}
+		c.Status(http.StatusOK)
+	} else {
+		// increment by 1
+		currentVotes, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to parse existing votes from DB. Error: %s", err))
+			return
+		}
+		err = redisClient.Set(lookupKey, currentVotes+1, 0).Err()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to add vote to DB. Error: %s", err))
+			return
+		}
+		c.Status(http.StatusOK)
+	}
+}
+
+func getAllURLReports(c *gin.Context) {
+
+	lookupKey := globalCounterKey + "*"
+	allURLs, err := redisClient.Keys(lookupKey).Result()
+	if err != nil && err != redis.Nil {
+		c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to retrieve existing URLs from DB. Error:%s", err))
+		return
+	} else if err == redis.Nil {
+		c.JSON(http.StatusBadRequest, "Empty DB")
+		return
+	} else {
+		var links []URLReport
+		for _, ctrVal := range allURLs {
+			link, _ := redisClient.Get(string(ctrVal)).Result()
+			voteCount, err := redisClient.Get(reportedURLVoteKey + link).Result()
+			if err != nil && err != redis.Nil {
+				c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to retrieve existing vote from DB. Error:%s", err))
+				return
+			} else if err == redis.Nil {
+				links = append(links, URLReport{
+					URL:     link,
+					Reports: 0,
+				})
+			} else {
+				currentVoteCount, err := strconv.ParseInt(voteCount, 10, 64)
+				if err != nil {
+					c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to parse existing votes from DB. Error: %s", err))
+					return
+				}
+				links = append(links, URLReport{
+					URL:     link,
+					Reports: currentVoteCount,
+				})
+			}
+		}
+		c.JSON(http.StatusOK, links)
+	}
 }
 
 func establishRedisConnection() error {
