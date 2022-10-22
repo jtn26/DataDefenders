@@ -208,8 +208,7 @@ module.exports = function (webpackEnv) {
               paths.appIndexJs,
             ]
           : paths.appIndexJs,
-      background: paths.appBackgroundJs,
-      content: paths.appContentJs,
+      dashboard: paths.appDashboardJs,
     },
     output: {
       // The build folder.
@@ -577,18 +576,24 @@ module.exports = function (webpackEnv) {
     plugins: [
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
+        {
+          filename: 'dashboard.html',
+          inject: true,
+          template: paths.appHtml,
+          chunks: ["dashboard"]
+        }
+      ),
+      new HtmlWebpackPlugin(
         Object.assign(
           {},
           {
             inject: true,
             template: paths.appHtml,
-            filename: 'index.html'
+            filename: 'index.html',
+            chunks: ["popup"]
           },
           isEnvProduction
             ? {
-                excludeChunks: [
-                  'content'
-                ],
                 minify: {
                   removeComments: true,
                   collapseWhitespace: true,
