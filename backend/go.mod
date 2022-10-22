@@ -2,7 +2,10 @@ module data-defenders-backend
 
 go 1.19
 
-require github.com/gin-gonic/gin v1.8.1
+require (
+	github.com/gin-gonic/gin v1.8.1
+	github.com/go-redis/redis v6.15.9+incompatible
+)
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect

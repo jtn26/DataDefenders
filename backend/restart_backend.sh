@@ -1,5 +1,6 @@
 docker pull golang
 
+docker stop data-defenders-backend
 docker rm data-defenders-backend
 
 docker run -d -p 8080:8080 -v $(pwd):/go/src -w "/go/src/" --name data-defenders-backend golang go run .
