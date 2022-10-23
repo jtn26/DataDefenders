@@ -26,17 +26,17 @@ var glblCtr int64
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-			c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-			c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-			c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
-			if c.Request.Method == "OPTIONS" {
-					c.AbortWithStatus(204)
-					return
-			}
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
 
-			c.Next()
+		c.Next()
 	}
 }
 
@@ -50,9 +50,9 @@ func main() {
 		return
 	}
 
-	router := gin.New()  
+	router := gin.New()
 	router.Use(CORSMiddleware())
-	
+
 	router.GET("/redistalk/ping", getRedisStatus)
 	router.POST("/redistalk/set", setRedisKeyValue)
 	router.GET("/redistalk/get/:key", getRedisKey)
@@ -165,7 +165,7 @@ func incURLReportCount(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to add vote to DB. Error: %s", err))
 			return
 		}
-		c.Status(http.StatusOK)
+		c.JSON(http.StatusOK, urlString)
 	} else {
 		// increment by 1
 		currentVotes, err := strconv.ParseInt(val, 10, 64)
@@ -178,12 +178,12 @@ func incURLReportCount(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, fmt.Sprintf("Failed to add vote to DB. Error: %s", err))
 			return
 		}
-		c.Status(http.StatusOK)
+		c.JSON(http.StatusOK, urlString)
 	}
 }
-func incGibReportCount(root *gin.Engine) gin.HandlerFunc { 
+func incGibReportCount(root *gin.Engine) gin.HandlerFunc {
 	//Increases the report count for a URL by 1, except the function is given the encoded version of the URL.
-	return func (c *gin.Context) {
+	return func(c *gin.Context) {
 		gibString := string(c.Param("gib"))
 		ctrKey, err := decode(gibString)
 		if err != nil {
