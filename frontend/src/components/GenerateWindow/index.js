@@ -1,10 +1,11 @@
 import './index.css';
-import { TextField, Button, Box, Container, CssBaseline, Fab, IconButton } from '@mui/material';
+import { 
+   Button, Box, Container, CssBaseline, IconButton, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import ReportWindow from '../../components/ReportWindow'
 import { getGibberish } from '../../shared/api';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import Menu from '@mui/icons-material/Menu'
+import Header from '../Header'
 
 function getCurrentTab() {
 
@@ -25,30 +26,26 @@ function getCurrentTab() {
   })
 }
 
-const GenerateWindow = ({ emailAddress }) => {
+const GenerateWindow = ({ emailAddress, showPopup }) => {
   const [reportWindowVar, setReportWindow] = useState("hide")
   const [customEmail, setCustomEmail] = useState("")
 
+
   const reportWindowCallback = (show) => {
-    console.log({ setReportWindow })
-    console.log(reportWindowVar)
-    console.log('start callback, show: ', show)
     setReportWindow(show)
-    console.log('done callback')
-    console.log(reportWindowVar)
   }
 
   useEffect(async () => {
     const tab = await getCurrentTab()
     const gibberish = await getGibberish(tab)
-    setCustomEmail(emailAddress + '+' + gibberish)
+    setCustomEmail(emailAddress.split("@")[0] + '+' + gibberish + "@" + emailAddress.split("@")[1])
   }, [setCustomEmail, getCurrentTab, getGibberish])
 
-  const newTab = () => {
-    chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });
-  }
+
   const copy = () => {
+    console.log('copied')
     navigator.clipboard.writeText(customEmail)
+    showPopup("Copied to clipboard.")
   }
   const report = () => {
     reportWindowCallback("show");
@@ -58,35 +55,32 @@ const GenerateWindow = ({ emailAddress }) => {
   (
     <header className="App-header">
       <CssBaseline />
-      <Container maxWidth="sm">
-        {/* <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }} /> */}
-      
-      <IconButton onClick={back} variant="outlined" color="primary" aria-label="Back">
-        Dashboard
-        <Menu />
-      </IconButton>
-      {/* <Fab onClick={newTab} variant="extended">Dashboard</Fab> */}
+       
+       
+      < Header />
 
-      <p>DataDefender</p>
-
+       
+    <Container maxWidth="sm">
       {customEmail ? 
-      <Box sx={{ display: 'flex', flexDirection: 'rows' }}>
-        <p>{customEmail}</p>
-        <IconButton onClick={copy} variant="contained"><ContentCopyIcon style={{ color: "white" }} /></IconButton>
+      <Box onClick={copy} sx={{ display: 'flex', flexDirection: 'rows', mt: 8, justifyContent: 'center', alignItems: 'center' }}>
+        <Typography>{customEmail}</Typography>
+        <IconButton variant="contained"><ContentCopyIcon style={{ color: "black" }} /></IconButton>
       </Box> : 
       <Box>
         <p>Generating gibberish...</p>
       </Box>}
       
       
-      <Button onClick={report} variant="contained">Report A Site</Button>
-      </Container>
+      <Button onClick={report} sx={{ alignSelf: 'right', mt: 3 }} variant="contained">Lookup/Report Site</Button>
+    </Container>
+    
     </header>
   )
   return (
     <>
       {reportWindowVar === "hide" && pageContents}
-      {reportWindowVar === "show" && <ReportWindow reportWindowCallback={reportWindowCallback} /> }
+      {reportWindowVar === "show" && <ReportWindow reportWindowCallback={reportWindowCallback} showPopup={showPopup} /> }
+
     </>
 )
 }

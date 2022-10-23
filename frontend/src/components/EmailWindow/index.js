@@ -1,10 +1,11 @@
-import { TextField, Button } from '@mui/material';
+import './index.css';
+import { TextField, Button, Box, Alert } from '@mui/material';
 import React, { useState } from 'react';
+import Header from '../Header';
 
-const EmailWindow = ({ emailAddressCallback }) => {
+const EmailWindow = ({ emailAddressCallback, showPopup }) => {
   
   const [userAddress, setUserAddress] = useState("");
-  const [errorText, setErrorText] = useState("");
 
   const handleOnChange = event => {
     setUserAddress(event.target.value);
@@ -12,21 +13,19 @@ const EmailWindow = ({ emailAddressCallback }) => {
   
   const submit = () => {
     if(userAddress.split("@")[1] == "gmail.com") {
-      setErrorText("")
       emailAddressCallback(userAddress);
     }
     else {
-      setErrorText("Invalid email!");
+      showPopup("Invalid email!","error");
     }
   }
 
   return <div>
-    <TextField required placeholder="example@gmail.com" onChange={handleOnChange} id="filled-basic" label="Enter Your Email Address" variant="filled" />
-    
-    <Button onClick={submit} variant="contained">Submit</Button>
-    {errorText && <p>{errorText}</p>}
-
-    call emailAddressCallback
+    <Header />
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', ml: 5, mr: 5, mt: 2}}>
+      <TextField required placeholder="example@gmail.com" onChange={handleOnChange} id="outlined-basic" helperText="Only Gmail is supported" label="Enter Email Address" variant="outlined" />
+      <Button onClick={submit} sx={{ alignSelf: 'center', mt: 3 }} variant="contained">Save</Button>
+    </Box>
   </div>
 }
 
