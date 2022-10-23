@@ -1,6 +1,10 @@
 import './index.css';
-import { TextField, Button, Box, Container, CssBaseline, Fab } from '@mui/material';
+import { TextField, Button, Box, Container, CssBaseline, Fab, IconButton } from '@mui/material';
 import React, { useEffect, useState } from 'react'
+import ReportWindow from '../../components/ReportWindow'
+import { getGibberish } from '../../shared/api';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import Menu from '@mui/icons-material/Menu'
 
 function getCurrentTab() {
 
@@ -15,51 +19,75 @@ function getCurrentTab() {
           resolve(host);
         })
     } catch (e) {
-        reject(e);
+      console.log('hit error')
+      reject(e);
     }
   })
 }
 
-const GenerateWindow = ({ emailAddress,  reportWindowCallback }) => {
-  const [currentPage, setCurrentPage] = useState("")
+const GenerateWindow = ({ emailAddress }) => {
+  const [reportWindowVar, setReportWindow] = useState("hide")
+  const [customEmail, setCustomEmail] = useState("")
+
+  const reportWindowCallback = (show) => {
+    console.log({ setReportWindow })
+    console.log(reportWindowVar)
+    console.log('start callback, show: ', show)
+    setReportWindow(show)
+    console.log('done callback')
+    console.log(reportWindowVar)
+  }
 
   useEffect(async () => {
     const tab = await getCurrentTab()
-    console.log(tab)
-    // setCurrentPage(tab)
-  }, [currentPage, setCurrentPage])
+    const gibberish = await getGibberish(tab)
+    setCustomEmail(emailAddress + '+' + gibberish)
+  }, [setCustomEmail, getCurrentTab, getGibberish])
 
   const newTab = () => {
     chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });
   }
   const copy = () => {
-    navigator.clipboard.writeText(emailAddress)
+    navigator.clipboard.writeText(customEmail)
   }
   const report = () => {
-    reportWindowCallback(true);
+    reportWindowCallback("show");
   }
+  
+  const pageContents = 
+  (
+    <header className="App-header">
+      <CssBaseline />
+      <Container maxWidth="sm">
+        {/* <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }} /> */}
+      
+      <IconButton onClick={back} variant="outlined" color="primary" aria-label="Back">
+        Dashboard
+        <Menu />
+      </IconButton>
+      {/* <Fab onClick={newTab} variant="extended">Dashboard</Fab> */}
 
-  // const { register, handleSubmit } = useForm();
+      <p>DataDefender</p>
 
+      {customEmail ? 
+      <Box sx={{ display: 'flex', flexDirection: 'rows' }}>
+        <p>{customEmail}</p>
+        <IconButton onClick={copy} variant="contained"><ContentCopyIcon style={{ color: "white" }} /></IconButton>
+      </Box> : 
+      <Box>
+        <p>Generating gibberish...</p>
+      </Box>}
+      
+      
+      <Button onClick={report} variant="contained">Report A Site</Button>
+      </Container>
+    </header>
+  )
   return (
-  <div className="App">
-  <header className="App-header">
-
-    <CssBaseline />
-    <Container maxWidth="sm">
-      {/* <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }} /> */}
-    
-    <Fab onClick={newTab} variant="extended">Dashboard</Fab>
-
-    <p>Defender</p>
-
-    <Button onClick={copy} variant="contained">Generate Address</Button>
-    
-    <Button onClick={report} variant="contained">Report A Site</Button>
-    </Container>
-
-  </header>
-</div>
+    <>
+      {reportWindowVar === "hide" && pageContents}
+      {reportWindowVar === "show" && <ReportWindow reportWindowCallback={reportWindowCallback} /> }
+    </>
 )
 }
 
