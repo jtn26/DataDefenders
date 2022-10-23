@@ -9,6 +9,14 @@ A chrome extension to let a user know which platforms are selling their personal
 4. Go back to `chrome://extensions` and click "Load Unpacked"
 5. Select the `frontend/build` directory and hit load
 
+## Devpost
+
+https://devpost.com/software/datadefender
+
+## Presentation
+
+`HackGT 9 Presentation.pdf`
+
 ## Screenshots
 
 ### Dashboard
