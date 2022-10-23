@@ -41,7 +41,6 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func main() {
-
 	err := establishRedisConnection()
 	glblCtr = 0
 
@@ -69,6 +68,7 @@ func main() {
 }
 
 func getGiberishToURL(c *gin.Context) {
+	//Gets Encoded URL and decodes it back to the original URL
 	gibString := string(c.Param("gib"))
 
 	ctrKey, err := decode(gibString)
@@ -92,6 +92,7 @@ func getGiberishToURL(c *gin.Context) {
 }
 
 func getURLToGiberish(c *gin.Context) {
+	//Converts URL to the encoded URL by using the global counter.
 	urlString := string(c.Param("url"))
 	val, err := redisClient.Get(urlString).Result()
 
@@ -132,6 +133,7 @@ func getURLToGiberish(c *gin.Context) {
 }
 
 func getURLReportCounts(c *gin.Context) {
+	//Gets the number of reports for a URL.
 	urlString := string(c.Param("url"))
 	lookupKey := reportedURLVoteKey + urlString
 	val, err := redisClient.Get(lookupKey).Result()
@@ -148,6 +150,7 @@ func getURLReportCounts(c *gin.Context) {
 }
 
 func incURLReportCount(c *gin.Context) {
+	//Increases the Report count for a URL by 1.
 	urlString := string(c.Param("url"))
 	lookupKey := reportedURLVoteKey + urlString
 	val, err := redisClient.Get(lookupKey).Result()
@@ -179,6 +182,7 @@ func incURLReportCount(c *gin.Context) {
 	}
 }
 func incGibReportCount(root *gin.Engine) gin.HandlerFunc { 
+	//Increases the report count for a URL by 1, except the function is given the encoded version of the URL.
 	return func (c *gin.Context) {
 		gibString := string(c.Param("gib"))
 		ctrKey, err := decode(gibString)
@@ -205,7 +209,7 @@ func incGibReportCount(root *gin.Engine) gin.HandlerFunc {
 }
 
 func getAllURLReports(c *gin.Context) {
-
+	//Gets the number of reports for all the URLs.
 	lookupKey := globalCounterKey + "*"
 	allURLs, err := redisClient.Keys(lookupKey).Result()
 	if err != nil && err != redis.Nil {
@@ -244,7 +248,7 @@ func getAllURLReports(c *gin.Context) {
 }
 
 func establishRedisConnection() error {
-
+	//Establishes connection with Redis through Go-redis.
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:     "host.docker.internal:6379",
 		Password: "",
@@ -256,6 +260,7 @@ func establishRedisConnection() error {
 }
 
 func getRedisStatus(c *gin.Context) {
+	//Gets the status of the Redis. Should send pong if successful.
 	pong, err := redisClient.Ping().Result()
 
 	if err != nil {
@@ -267,6 +272,7 @@ func getRedisStatus(c *gin.Context) {
 }
 
 func setRedisKeyValue(c *gin.Context) {
+	//Sets the Redis key-value pair.
 	key := string(c.PostForm("key"))
 	value := string(c.PostForm("value"))
 	err := redisClient.Set(key, value, 0).Err()
@@ -279,6 +285,7 @@ func setRedisKeyValue(c *gin.Context) {
 }
 
 func getRedisKey(c *gin.Context) {
+	//Gets the value in Redis based on the given key.
 	key := string(c.Param("key"))
 	val, err := redisClient.Get(key).Result()
 
