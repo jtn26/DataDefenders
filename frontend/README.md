@@ -1,25 +1,23 @@
-# DataDefenders
+# DataDefenders Frontend
 
-A chrome extension to let a user know which platforms are selling their personal information that leads to downstream utilization by marketers.
-## Demoing the site
+## Built minified extension components - `build/*`
+## Pages
+### Dashboard - `src/pages/dashboard/Dashboard.js`
 
-1. Go to `chrome://extensions`
-2. In the top right, toggle "Developer Mode" on
-3. Clone our repo (`git clone https://github.com/jtn26/DataDefenders`)
-4. Go back to `chrome://extensions` and click "Load Unpacked"
-5. Select the `frontend/build` directory and hit load
+### Main Entrypoint - `src/pages/popup/Popup.js`
 
-## Screenshots
+## Components
 
-### Inputting Email
+### Initial Email Window - `src/components/EmailWindow/index.js`
 
-![img/email.png](./img/email.png)
-![img/invalid_email.png](./img/invalid_email.png)
+### Main Extension Window (Generate + Copy Email) - `src/components/GenerateWindow/index.js`
 
-### Submitting Reports
+### Report / Info Window - `src/components/ReportWindow/index.js`
 
-![img/report_submitted.png](./img/report_submitted.png)
-![img/report.png](./img/report.png)
-![img/info.png](./img/info.png)
+## Helper Components
 
-### Dashboard
+### Dashboard Table - `src/components/Table/index.js`
+
+### Page Header - `src/components/Header/index.js`
+
+## Backend Interface / API - `src/shared/api.js`
