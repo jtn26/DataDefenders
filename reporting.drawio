@@ -1,1 +1,40 @@
-<mxfile host="app.diagrams.net" modified="2022-10-23T00:39:13.353Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36" version="20.4.0" etag="r9Odz96AbYbwZuuETKXb" type="github"><diagram id="UD0hVKIhMe1oo2SPYG0U">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-10-23T04:42:28.688Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36" etag="eKKxjZEjQKpd5MrzIIss" version="20.4.0" type="github">
+  <diagram id="UD0hVKIhMe1oo2SPYG0U" name="Page-1">
+    <mxGraphModel dx="1298" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UcoX6se1YYZaoTesTN8S-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="UcoX6se1YYZaoTesTN8S-2" target="UcoX6se1YYZaoTesTN8S-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UcoX6se1YYZaoTesTN8S-2" value="" style="shape=message;html=1;whiteSpace=wrap;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="180" y="450" width="60" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="UcoX6se1YYZaoTesTN8S-3" value="email+enc@gmail.com" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="160" y="490" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UcoX6se1YYZaoTesTN8S-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="UcoX6se1YYZaoTesTN8S-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="480" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UcoX6se1YYZaoTesTN8S-5" value="User enters &quot;enc&quot; and reports the website." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="305" y="440" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UcoX6se1YYZaoTesTN8S-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="UcoX6se1YYZaoTesTN8S-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UcoX6se1YYZaoTesTN8S-8" value="&quot;enc&quot; is decoded to the URL." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="440" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UcoX6se1YYZaoTesTN8S-10" value="Report counter for URL incremented by 1." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="440" width="130" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
