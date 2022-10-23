@@ -1,0 +1,74 @@
+html, body, #root {
+  height: 300px;
+  width: 300px;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.App {
+  text-align: center;
+  height: 100%;
+}
+.emailWindow {
+  background: whitesmoke;
+  height: 100%;
+}
+.App-header {
+  background-color: whitesmoke;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  color: gray;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@-webkit-keyframes App-logo-spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+body {
+  color: gray;
+}
+
+p {
+  color: black;
+}
+.reportWindow {
+  background: whitesmoke;
+  height: 100%;
+}
+
+/*# sourceMappingURL=popup.e061bd93.css.map*/

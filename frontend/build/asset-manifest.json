@@ -1,0 +1,18 @@
+{
+  "files": {
+    "popup.js": "/static/js/popup.js",
+    "popup.css": "/static/css/popup.e061bd93.css",
+    "dashboard.js": "/static/js/dashboard.js",
+    "dashboard.css": "/static/css/dashboard.bf8a32a5.css",
+    "dashboard.html": "/dashboard.html",
+    "index.html": "/index.html",
+    "popup.js.map": "/static/js/popup.js.map",
+    "popup.e061bd93.css.map": "/static/css/popup.e061bd93.css.map",
+    "dashboard.js.map": "/static/js/dashboard.js.map",
+    "dashboard.bf8a32a5.css.map": "/static/css/dashboard.bf8a32a5.css.map"
+  },
+  "entrypoints": [
+    "static/js/popup.js",
+    "static/css/popup.e061bd93.css"
+  ]
+}
