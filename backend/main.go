@@ -66,9 +66,9 @@ func main() {
 		return
 	}
 
-	router = gin.New()  
+	router := gin.New()  
 	router.Use(CORSMiddleware())
-	
+
 	router.GET("/albums", getAlbums)
 	router.GET("/albums/:id", getAlbumByID)
 	router.GET("/redistalk/ping", getRedisStatus)
